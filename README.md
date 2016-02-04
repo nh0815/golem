@@ -1,2 +1,2 @@
 # golem
-System monitoring dashboard written in Go
+(very basic) System monitoring dashboard written in Go
