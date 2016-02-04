@@ -11,8 +11,7 @@ import (
 func main() {
 	//println("hello world")
 	cpu := read_cpu_info()
-	//println(strings.Split(cpu, "\n"))
-	for _, element := range strings.Split(cpu, "\n") {
+	for _, element := range split_on_newline(cpu) {
 		println(element)
 		println()
 	}
@@ -24,4 +23,8 @@ func read_cpu_info() string {
 		panic(err)
 	}
 	return string(data)
+}
+
+func split_on_newline(str string) []string {
+	return strings.Split(str, "\n")
 }
