@@ -10,16 +10,6 @@ import (
 )
 
 func main() {
-	//info := read_cpu_info()
-	//info := read_mem_info()
-	//info := read_disk_info()
-	/*
-		info := read_net_info()
-		for _, element := range split_on_newline(info) {
-			println(element)
-			println()
-		}
-	*/
 	go poll()
 	fs := http.FileServer(http.Dir("../static"))
 	http.Handle("/", fs)
