@@ -1,0 +1,19 @@
+{
+  "name": "golem",
+  "homepage": "https://github.com/nh0815/golem",
+  "authors": [
+    "Nick Hirakawa <nh0815@gmail.com>"
+  ],
+  "description": "system monitoring in Go",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
