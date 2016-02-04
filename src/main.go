@@ -11,7 +11,8 @@ import (
 func main() {
 	//println("hello world")
 	//info := read_cpu_info()
-	info := read_mem_info()
+	//info := read_mem_info()
+	info := read_disk_info()
 	for _, element := range split_on_newline(info) {
 		println(element)
 		println()
@@ -28,6 +29,14 @@ func read_cpu_info() string {
 
 func read_mem_info() string {
 	data, err := ioutil.ReadFile("/proc/meminfo")
+	if err != nil {
+		panic(err)
+	}
+	return string(data)
+}
+
+func read_disk_info() string {
+	data, err := ioutil.ReadFile("/proc/diskstats")
 	if err != nil {
 		panic(err)
 	}
