@@ -1,17 +1,14 @@
 package main
 
 import (
-	//"bufio"
-	//"fmt"
+	"gopkg.in/igm/sockjs-go.v2/sockjs"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
-	//"os"
 )
 
 func main() {
-	//println("hello world")
 	//info := read_cpu_info()
 	//info := read_mem_info()
 	//info := read_disk_info()
@@ -24,8 +21,13 @@ func main() {
 	*/
 	fs := http.FileServer(http.Dir("../static"))
 	http.Handle("/", fs)
+	http.Handle("/ws/", sockjs.NewHandler("/ws", sockjs.DefaultOptions, wsHandler))
 	log.Println("Listening...")
 	http.ListenAndServe(":3000", nil)
+}
+
+func wsHandler(session sockjs.Session) {
+	log.Println("new sockjs session established")
 }
 
 func read_cpu_info() string {
