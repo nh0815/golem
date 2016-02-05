@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/igm/pubsub"
 	"gopkg.in/igm/sockjs-go.v2/sockjs"
 	"io/ioutil"
 	"log"
@@ -9,25 +10,44 @@ import (
 	"time"
 )
 
+var broadcaster pubsub.Publisher
+
 func main() {
-	go poll()
 	fs := http.FileServer(http.Dir("../static"))
 	http.Handle("/", fs)
 	http.Handle("/ws/", sockjs.NewHandler("/ws", sockjs.DefaultOptions, wsHandler))
 	log.Println("Listening...")
+	go func() {
+		poll()
+	}()
 	http.ListenAndServe(":3000", nil)
 }
 
 func wsHandler(session sockjs.Session) {
 	log.Println("new sockjs session established")
+	go func() {
+		reader, _ := broadcaster.SubChannel(nil)
+		for {
+			status := <-reader
+			if err := session.Send(status.(string)); err != nil {
+				return
+			}
+		}
+	}()
 }
 
 func poll() {
 	for {
-		//log.Println("reading status")
-		read_status()
-		//log.Println("sleeping for 1s")
-		time.Sleep(1000 * time.Millisecond)
+		//status := read_status()
+		status := "asdf"
+		go func() {
+			log.Println("sending status")
+			broadcaster.Publish(status)
+			log.Println("sent status")
+		}()
+		//channel <- read_status()[0]
+		log.Println("sleeping for 1000ms")
+		time.Sleep(time.Second)
 	}
 }
 
