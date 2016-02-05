@@ -38,11 +38,10 @@ func wsHandler(session sockjs.Session) {
 
 func poll() {
 	for {
-		//status := read_status()
-		status := "asdf"
+		status := read_status()
 		go func() {
 			log.Println("sending status")
-			broadcaster.Publish(status)
+			broadcaster.Publish(status[0])
 			log.Println("sent status")
 		}()
 		//channel <- read_status()[0]
