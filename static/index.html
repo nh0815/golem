@@ -12,21 +12,24 @@
 	<div ng-controller="GolemController">
 		<h1>welcome to golem</h1>
 		<div id="cpu">
-			<div>{{cpu.user}}</div>
-			<div>{{cpu.nice}}</div>
-			<div>{{cpu.system}}</div>
-			<div>{{idle}}</div>
-			<div>{{cpu.iowait}}</div>
+			<h5 class="header">CPU</h5>
+			<div>user: {{cpu.user}}</div>
+			<div>nice: {{cpu.nice}}</div>
+			<div>system: {{cpu.system}}</div>
+			<div>idle: {{cpu.idle}}</div>
+			<div>iowait: {{cpu.iowait}}</div>
 		</div>
 		<div id="memory">
-			<div>{{memory.free}}</div>
-			<div>{{memory.total}}</div>
+			<h5 class="header">Memory</h5>
+			<div>free: {{memory.free}}</div>
+			<div>total: {{memory.total}}</div>
 		</div>
 		<div id="network">
+			<h5 class="header">Network</h5>
 			<div ng-repeat="interface in network.interfaces">
-				<div>{{interface.name}}</div>
-				<div>{{interface.receiveBytes}}</div>
-				<div>{{interface.transmitBytes}}</div>
+				<div class="name">{{interface.name}}</div>
+				<div>receive bytes: {{interface.receiveBytes}}</div>
+				<div>transmit bytes: {{interface.transmitBytes}}</div>
 			</div>
 		</div>
 	</div>
