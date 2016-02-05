@@ -13,6 +13,7 @@ import (
 
 type SysInfo struct {
 	Cpu CpuInfo `json:"cpu"`
+	Mem MemInfo `json:"memory"`
 }
 
 type CpuInfo struct {
@@ -21,6 +22,11 @@ type CpuInfo struct {
 	System string `json:"system"`
 	Idle   string `json:"idle"`
 	Iowait string `json:"iowait"`
+}
+
+type MemInfo struct {
+	Total string `json:"total"`
+	Free  string `json:"free"`
 }
 
 var broadcaster pubsub.Publisher
@@ -64,7 +70,7 @@ func poll() {
 }
 
 func read_status() SysInfo {
-	system := SysInfo{read_cpu_info()}
+	system := SysInfo{read_cpu_info(), read_mem_info()}
 	return system
 }
 
@@ -79,12 +85,15 @@ func read_cpu_info() CpuInfo {
 	return cpu_info
 }
 
-func read_mem_info() string {
+func read_mem_info() MemInfo {
 	data, err := ioutil.ReadFile("/proc/meminfo")
 	if err != nil {
 		panic(err)
 	}
-	return string(data)
+	mem_info := split_on_newline(string(data))
+	total := strings.Fields(mem_info[0])[1]
+	free := strings.Fields(mem_info[1])[1]
+	return MemInfo{total, free}
 }
 
 func read_disk_info() string {
