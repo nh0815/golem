@@ -11,6 +11,24 @@
 <body ng-app="Golem">
 	<div ng-controller="GolemController">
 		<h1>welcome to golem</h1>
+		<div id="cpu">
+			<div>{{cpu.user}}</div>
+			<div>{{cpu.nice}}</div>
+			<div>{{cpu.system}}</div>
+			<div>{{idle}}</div>
+			<div>{{cpu.iowait}}</div>
+		</div>
+		<div id="memory">
+			<div>{{memory.free}}</div>
+			<div>{{memory.total}}</div>
+		</div>
+		<div id="network">
+			<div ng-repeat="interface in network.interfaces">
+				<div>{{interface.name}}</div>
+				<div>{{interface.receiveBytes}}</div>
+				<div>{{interface.transmitBytes}}</div>
+			</div>
+		</div>
 	</div>
 </body>
 </html>
