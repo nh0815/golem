@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -25,8 +26,8 @@ type CpuInfo struct {
 }
 
 type MemInfo struct {
-	Total string `json:"total"`
-	Free  string `json:"free"`
+	Total int64 `json:"total"`
+	Free  int64 `json:"free"`
 }
 
 var broadcaster pubsub.Publisher
@@ -91,8 +92,10 @@ func read_mem_info() MemInfo {
 		panic(err)
 	}
 	mem_info := split_on_newline(string(data))
-	total := strings.Fields(mem_info[0])[1]
-	free := strings.Fields(mem_info[1])[1]
+	total_string_array := strings.Fields(mem_info[0])
+	total := byte_string_to_bits(total_string_array[1], total_string_array[2])
+	free_string_array := strings.Fields(mem_info[1])
+	free := byte_string_to_bits(free_string_array[1], free_string_array[2])
 	return MemInfo{total, free}
 }
 
@@ -110,6 +113,31 @@ func read_net_info() string {
 		panic(err)
 	}
 	return string(data)
+}
+
+func byte_string_to_bits(bytes string, suffix string) int64 {
+	suffix = strings.ToUpper(suffix)
+	switch {
+	case suffix == "B":
+		return string_to_int64(bytes)
+	case suffix == "KB":
+		return string_to_int64(bytes) * 1024
+	case suffix == "MB":
+		return string_to_int64(bytes) * 1024 * 1024
+	case suffix == "GB":
+		return string_to_int64(bytes) * 1024 * 1024 * 1024
+	case suffix == "TB":
+		return string_to_int64(bytes) * 1024 * 1024 * 1024 * 1024
+	}
+	return string_to_int64(bytes)
+}
+
+func string_to_int64(s string) int64 {
+	i, err := strconv.ParseInt(s, 10, 64)
+	if err != nil {
+		log.Println(err)
+	}
+	return i
 }
 
 func split_on_newline(str string) []string {
