@@ -6,7 +6,8 @@ socket.onopen = function(){
 };
 
 socket.onmessage = function(e){
-	console.log(e);
+	var systemInfo = JSON.parse(e.data)
+	console.log(systemInfo);
 };
 
 socket.onclose = function(){
