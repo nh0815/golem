@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"github.com/igm/pubsub"
 	"gopkg.in/igm/sockjs-go.v2/sockjs"
 	"io/ioutil"
@@ -9,6 +10,20 @@ import (
 	"strings"
 	"time"
 )
+
+type SysInfo struct {
+	Cpu CpuInfo `json:"cpu"`
+}
+
+type CpuInfo struct {
+	User    string `json:"user"`
+	Nice    string `json:"nice"`
+	System  string `json:"system"`
+	Idle    string `json:"idle"`
+	Iowait  string `json:"iowait"`
+	Irq     string `json:"irq"`
+	Softirq string `json:"softirq"`
+}
 
 var broadcaster pubsub.Publisher
 
@@ -39,28 +54,32 @@ func wsHandler(session sockjs.Session) {
 func poll() {
 	for {
 		status := read_status()
+		system_status, err := json.Marshal(status)
+		if err != nil {
+			log.Println(err)
+		}
+		log.Println(system_status)
 		go func() {
-			broadcaster.Publish(status[0])
+			broadcaster.Publish(string(system_status))
 		}()
 		time.Sleep(time.Second)
 	}
 }
 
-func read_status() [4444]string {
-	var result [4444]string
-	result[0] = read_cpu_info()
-	result[1] = read_mem_info()
-	result[2] = read_disk_info()
-	result[3] = read_net_info()
-	return result
+func read_status() SysInfo {
+	system := SysInfo{read_cpu_info()}
+	return system
 }
 
-func read_cpu_info() string {
+func read_cpu_info() CpuInfo {
 	data, err := ioutil.ReadFile("/proc/stat")
 	if err != nil {
 		panic(err)
 	}
-	return string(data)
+	cpu := split_on_newline(string(data))[0]
+	fields := strings.Split(cpu, " ")
+	cpu_info := CpuInfo{fields[0], fields[1], fields[2], fields[3], fields[4], fields[5], fields[6]}
+	return cpu_info
 }
 
 func read_mem_info() string {
