@@ -40,12 +40,8 @@ func poll() {
 	for {
 		status := read_status()
 		go func() {
-			log.Println("sending status")
 			broadcaster.Publish(status[0])
-			log.Println("sent status")
 		}()
-		//channel <- read_status()[0]
-		log.Println("sleeping for 1000ms")
 		time.Sleep(time.Second)
 	}
 }
