@@ -16,13 +16,11 @@ type SysInfo struct {
 }
 
 type CpuInfo struct {
-	User    string `json:"user"`
-	Nice    string `json:"nice"`
-	System  string `json:"system"`
-	Idle    string `json:"idle"`
-	Iowait  string `json:"iowait"`
-	Irq     string `json:"irq"`
-	Softirq string `json:"softirq"`
+	User   string `json:"user"`
+	Nice   string `json:"nice"`
+	System string `json:"system"`
+	Idle   string `json:"idle"`
+	Iowait string `json:"iowait"`
 }
 
 var broadcaster pubsub.Publisher
@@ -76,8 +74,8 @@ func read_cpu_info() CpuInfo {
 		panic(err)
 	}
 	cpu := split_on_newline(string(data))[0]
-	fields := strings.Split(cpu, " ")
-	cpu_info := CpuInfo{fields[0], fields[1], fields[2], fields[3], fields[4], fields[5], fields[6]}
+	fields := strings.Fields(cpu)
+	cpu_info := CpuInfo{fields[1], fields[2], fields[3], fields[4], fields[5]}
 	return cpu_info
 }
 
