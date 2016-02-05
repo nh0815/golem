@@ -58,7 +58,6 @@ func poll() {
 		if err != nil {
 			log.Println(err)
 		}
-		log.Println(system_status)
 		go func() {
 			broadcaster.Publish(string(system_status))
 		}()
