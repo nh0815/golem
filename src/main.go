@@ -32,7 +32,7 @@ type MemInfo struct {
 }
 
 type NetInfo struct {
-	Net []NetInterface `json:"network"`
+	Interfaces []NetInterface `json:"interfaces"`
 }
 
 type NetInterface struct {
