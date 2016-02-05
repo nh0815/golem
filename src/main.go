@@ -15,6 +15,7 @@ import (
 type SysInfo struct {
 	Cpu CpuInfo `json:"cpu"`
 	Mem MemInfo `json:"memory"`
+	Net NetInfo `json:"network"`
 }
 
 type CpuInfo struct {
@@ -28,6 +29,30 @@ type CpuInfo struct {
 type MemInfo struct {
 	Total int64 `json:"total"`
 	Free  int64 `json:"free"`
+}
+
+type NetInfo struct {
+	Net []NetInterface `json:"network"`
+}
+
+type NetInterface struct {
+	Name               string `json:"name"`
+	RecvBytes          int64  `json:"receiveBytes"`
+	RecvPackets        int64  `json:"receivePackets"`
+	RecvErrs           int64  `json:"receiveErrors"`
+	RecvDrop           int64  `json:"receiveDrops"`
+	RecvFifo           int64  `json:"receiveFifo"`
+	RecvFrame          int64  `json:"receiveFrame"`
+	RecvCompressed     int64  `json:"receiveCompressed"`
+	RecvMulticast      int64  `json:"receiveMulticast"`
+	TransmitBytes      int64  `json:"transmitBytes"`
+	TransmitPackets    int64  `json:"transmitPackets"`
+	TransmitErrs       int64  `json:"transmitErrors"`
+	TransmitDrops      int64  `json:"transmitDrops"`
+	TransmitFifo       int64  `json:"transmitFifo"`
+	TransmitCollisions int64  `json:"transmitCollisions"`
+	TransmitCarrier    int64  `json:"transmitCarrier"`
+	TransmitCompressed int64  `json:"transmitCompressed"`
 }
 
 var broadcaster pubsub.Publisher
@@ -71,7 +96,7 @@ func poll() {
 }
 
 func read_status() SysInfo {
-	system := SysInfo{read_cpu_info(), read_mem_info()}
+	system := SysInfo{read_cpu_info(), read_mem_info(), read_net_info()}
 	return system
 }
 
@@ -107,12 +132,36 @@ func read_disk_info() string {
 	return string(data)
 }
 
-func read_net_info() string {
+func read_net_info() NetInfo {
 	data, err := ioutil.ReadFile("/proc/net/dev")
 	if err != nil {
 		panic(err)
 	}
-	return string(data)
+	data_string := split_on_newline(strings.TrimSpace(string(data)))[2:]
+	interfaces := []NetInterface{}
+	for i := range data_string {
+		interface_string := strings.Fields(data_string[i])
+		name := strings.Replace(interface_string[0], ":", "", -1)
+		recv_bytes := string_to_int64(interface_string[1])
+		recv_packets := string_to_int64(interface_string[2])
+		recv_errors := string_to_int64(interface_string[3])
+		recv_drop := string_to_int64(interface_string[4])
+		recv_fifo := string_to_int64(interface_string[5])
+		recv_frame := string_to_int64(interface_string[6])
+		recv_compressed := string_to_int64(interface_string[7])
+		recv_multicast := string_to_int64(interface_string[8])
+		transmit_bytes := string_to_int64(interface_string[9])
+		transmit_packets := string_to_int64(interface_string[10])
+		transmit_errors := string_to_int64(interface_string[11])
+		transmit_drops := string_to_int64(interface_string[12])
+		transmit_fifo := string_to_int64(interface_string[13])
+		transmit_collision := string_to_int64(interface_string[14])
+		transmit_carrier := string_to_int64(interface_string[15])
+		transmit_compressed := string_to_int64(interface_string[16])
+		net_interface := NetInterface{name, recv_bytes, recv_packets, recv_errors, recv_drop, recv_fifo, recv_frame, recv_compressed, recv_multicast, transmit_bytes, transmit_packets, transmit_errors, transmit_drops, transmit_fifo, transmit_collision, transmit_carrier, transmit_compressed}
+		interfaces = append(interfaces, net_interface)
+	}
+	return NetInfo{interfaces}
 }
 
 func byte_string_to_bits(bytes string, suffix string) int64 {
