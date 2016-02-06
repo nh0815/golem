@@ -10,47 +10,6 @@ app.controller('GolemController', ['$scope',
 
 		/* chart code */
 
-		$scope.cpuChart = {
-			data: [{
-				values: [],
-				key: 'User'
-			}, {
-				values: [],
-				key: 'Nice'
-			}, {
-				values: [],
-				key: 'Syste,'
-			}],
-			options: {
-				chart: {
-					type: 'lineChart',
-					height: 450
-				},
-				title: {
-					enable: true,
-					text: 'cpu'
-				}
-			}
-		};
-
-		$scope.memoryChart = {
-			data: [{
-				values: [],
-				key: 'usage'
-			}],
-			options: {
-				chart: {
-					type: 'lineChart',
-					height: 450
-				},
-				title: {
-					enable: true,
-					text: 'memory'
-				}
-
-			}
-		};
-
 		var addCpuData = function(cpu, timestamp){
 			var user = {
 				x: timestamp,
@@ -79,11 +38,11 @@ app.controller('GolemController', ['$scope',
 			$scope.memoryChart.data[0].values.push(usage);
 		};
 
-		var addNetworkData = function(network){
+		var addNetworkData = function(network, timestamp){
 			
 		};
 
-		var addDiskData = function(data){
+		var addDiskData = function(data, timestamp){
 			
 		};
 
