@@ -20,13 +20,13 @@ type SysInfo struct {
 }
 
 type CpuInfo struct {
-	User    string `json:"user"`
-	Nice    string `json:"nice"`
-	System  string `json:"system"`
-	Idle    string `json:"idle"`
-	Iowait  string `json:"iowait"`
-	Irq     string `json:"irq"`
-	IrqSoft string `json:"irqSoft"`
+	User    int64 `json:"user"`
+	Nice    int64 `json:"nice"`
+	System  int64 `json:"system"`
+	Idle    int64 `json:"idle"`
+	Iowait  int64 `json:"iowait"`
+	Irq     int64 `json:"irq"`
+	IrqSoft int64 `json:"irqSoft"`
 }
 
 type MemInfo struct {
@@ -129,7 +129,14 @@ func read_cpu_info() CpuInfo {
 	}
 	cpu := split_on_newline(string(data))[0]
 	fields := strings.Fields(cpu)
-	cpu_info := CpuInfo{fields[1], fields[2], fields[3], fields[4], fields[5], fields[6], fields[7]}
+	user := string_to_int64(fields[1])
+	nice := string_to_int64(fields[2])
+	system := string_to_int64(fields[3])
+	idle := string_to_int64(fields[4])
+	iowait := string_to_int64(fields[5])
+	irq := string_to_int64(fields[6])
+	irq_soft := string_to_int64(fields[7])
+	cpu_info := CpuInfo{user, nice, system, idle, iowait, irq, irq_soft}
 	return cpu_info
 }
 
