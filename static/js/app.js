@@ -19,12 +19,8 @@ app.controller('GolemController', ['$scope',
 			},
 			data: [
 				{
-					values: [
-						{x:0, y:0},
-						{x:1, y:1},
-						{x:2,y:2}
-					],
-					key: '0-5'
+					values: [],
+					key: 'user'
 				}
 			]
 		};
@@ -42,20 +38,21 @@ app.controller('GolemController', ['$scope',
 			},
 			data: [
 				{
-					values: [
-						{x: 100, y:-100},
-						{x: 50, y:60},
-						{x: -10, y:99}
-					],
-					key: 'numbers',
+					values: [],
+					key: 'memory',
 					area: true
 				}
 			]
 		};
 
-		var addCpuData = function(cpu, timestamp){};
+		var addCpuData = function(cpu, timestamp){
+			$scope.cpu.data[0].values.push({x:timestamp, y:cpu.user});
+		};
 
-		var addMemoryData = function(memory, timestamp){};
+		var addMemoryData = function(memory, timestamp){
+			var memoryUsage = (memory.total-memory.free) / memory.total;
+			$scope.memory.data[0].values.push({x: timestamp, y: memoryUsage});
+		};
 
 		var addNetworkData = function(network, timestamp){};
 
