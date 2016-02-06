@@ -6,6 +6,8 @@ var app = angular.module('Golem', [
 app.controller('GolemController', ['$scope',
 	function($scope){
 
+		var counter = 0;
+
 		/* chart code */
 
 		$scope.cpuChart = {
@@ -31,6 +33,24 @@ app.controller('GolemController', ['$scope',
 			}
 		};
 
+		$scope.memoryChart = {
+			data: [{
+				values: [],
+				key: 'usage'
+			}],
+			options: {
+				chart: {
+					type: 'lineChart',
+					height: 450
+				},
+				title: {
+					enable: true,
+					text: 'memory'
+				}
+
+			}
+		};
+
 		var addCpuData = function(cpu, timestamp){
 			var user = {
 				x: timestamp,
@@ -51,8 +71,12 @@ app.controller('GolemController', ['$scope',
 			$scope.cpuChart.data[2].values.push(system);
 		};
 
-		var addMemoryData = function(memory){
-			
+		var addMemoryData = function(memory, timestamp){
+			var usage = {
+				x: timestamp,
+				y: 100
+			};
+			$scope.memoryChart.data[0].values.push(usage);
 		};
 
 		var addNetworkData = function(network){
@@ -65,27 +89,6 @@ app.controller('GolemController', ['$scope',
 
 		/* end chart code */
 
-		$scope.cpu = {
-			user: -1,
-			nice: -1,
-			system: -1,
-			idle: -1,
-			iowait: -1
-		};
-
-		$scope.memory = {
-			total: -1,
-			free: -1
-		};
-
-		$scope.network = {
-			interfaces: []	
-		};
-
-		$scope.disk = {
-			disks: []	
-		};
-
 		/* socket code */
 
 		var socket = new SockJS(window.location.origin + '/ws');
@@ -95,12 +98,11 @@ app.controller('GolemController', ['$scope',
 		};
 
 		socket.onmessage = function(e){
+			counter++;
 			var systemInfo = JSON.parse(e.data);
-			$scope.cpu = systemInfo.cpu;
-			addCpuData(systemInfo.cpu, Date.parse(systemInfo.timestamp));
-			$scope.memory = systemInfo.memory;
-			$scope.network = systemInfo.network;
-			$scope.disk = systemInfo.disk;
+			var time = Date.parse(systemInfo.timestamp);
+			addCpuData(systemInfo.cpu, time);
+			addMemoryData(systemInfo.memory, counter);
 			$scope.$apply();
 		};
 
