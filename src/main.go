@@ -13,10 +13,11 @@ import (
 )
 
 type SysInfo struct {
-	Cpu  CpuInfo  `json:"cpu"`
-	Mem  MemInfo  `json:"memory"`
-	Net  NetInfo  `json:"network"`
-	Disk DiskInfo `json:"disk"`
+	Timestamp time.Time `json:"timestamp"`
+	Cpu       CpuInfo   `json:"cpu"`
+	Mem       MemInfo   `json:"memory"`
+	Net       NetInfo   `json:"network"`
+	Disk      DiskInfo  `json:"disk"`
 }
 
 type CpuInfo struct {
@@ -118,7 +119,7 @@ func poll() {
 }
 
 func read_status() SysInfo {
-	system := SysInfo{read_cpu_info(), read_mem_info(), read_net_info(), read_disk_info()}
+	system := SysInfo{time.Now(), read_cpu_info(), read_mem_info(), read_net_info(), read_disk_info()}
 	return system
 }
 
