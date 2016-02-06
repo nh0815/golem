@@ -9,69 +9,11 @@
 	<script src="bower/jquery/dist/jquery.min.js"></script>
 	<script src="bower/sockjs/sockjs.min.js"></script>
 	<script src="bower/angular/angular.min.js"></script>
-	<script src="bower/d3/d3.min.js"></script>
-	<script src="bower/nvd3/build/nv.d3.min.js"></script>
-	<script src="bower/angular-nvd3/dist/angular-nvd3.min.js"></script>
 	<script src="js/app.js"></script>
 </head>
 <body ng-app="Golem">
 	<div ng-controller="GolemController">
 		<h1>welcome to golem</h1>
-		<div id="cpu">
-			<h5 class="header">CPU</h5>
-			<div>user: {{cpu.user}}</div>
-			<div>nice: {{cpu.nice}}</div>
-			<div>system: {{cpu.system}}</div>
-			<div>idle: {{cpu.idle}}</div>
-			<div>iowait: {{cpu.iowait}}</div>
-			<div>irq: {{cpu.irq}}</div>
-			<div>soft irq: {{cpu.irqSoft}}</div>
-		</div>
-		<div id="memory">
-			<h5 class="header">Memory</h5>
-			<div>free: {{memory.free}}</div>
-			<div>total: {{memory.total}}</div>
-		</div>
-		<div id="network">
-			<h5 class="header">Network</h5>
-			<div ng-repeat="interface in network.interfaces">
-				<div class="name">{{interface.name}}</div>
-				<div>receive bytes: {{interface.receiveBytes}}</div>
-				<div>receive compressed: {{interface.receiveCompressed}}</div>
-				<div>receive drops: {{interface.receiveDrops}}</div>
-				<div>receive fifo: {{interface.receiveFifo}}</div>
-				<div>receive frame: {{interface.receiveFrame}}</div>
-				<div>receive multicast: {{interface.receiveMulticast}}</div>
-				<div>receive packets: {{interface.receievePackets}}</div>
-				<div>transmit bytes: {{interface.transmitBytes}}</div>
-				<div>transmit carrier: {{interface.transmitCarrier}}</div>
-				<div>transmit collisions: {{interface.transmitCollisions}}</div>
-				<div>transmit drops: {{interface.transmitDrops}}</div>
-				<div>transmit errors: {{interface.transmitErrors}}</div>
-				<div>transmit fifo: {{interface.transmitFifo}}</div>
-				<div>transmit packets: {{interface.transmitPackets}}</div>
-			</div>
-		</div>
-		<div id="disk">
-			<h5 class="header">Disk</h5>
-			<div ng-repeat="d in disk.disks">
-				<div class="name">{{d.name}}</div>
-				<div>reads completed: {{d.readsCompleted}}</div>
-				<div>reads merged: {{d.readsMerged}}</div>
-				<div>sectors read: {{d.sectorsRead}}</div>
-				<div>ms reading: {{d.timeReading}}</div>
-				<div>writes completed: {{d.writesCompleted}}</div>
-				<div>writes merged: {{d.writesMerged}}</div>
-				<div>sectors written: {{d.sectorsWritten}}</div>
-				<div>ms writing: {{d.timeWriting}}</div>
-				<div>i/o ops in progress: {{d.iopsInProgress}}</div>
-				<div>i/o time: {{d.ioTime}}</div>
-				<div>weighted i/o time: {{d.ioTimeWeighted}}</div>
-			</div>
-		</div>
-		<div id="charts">
-			<nvd3 id="cpu-chart" options="cpuChart.options" data="cpuChart.data">
-		</div>
 	</div>
 </body>
 </html>
