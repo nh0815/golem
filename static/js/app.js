@@ -17,11 +17,7 @@ app.controller('GolemController', ['$scope',
 			free: -1
 		};
 
-		$scope.network = {
-			name: '',
-			receiveBytes: -1,
-			transmitBytes: -1
-		};
+		$scope.network = [];
 
 		var socket = new SockJS(window.location.origin + '/ws');
 
