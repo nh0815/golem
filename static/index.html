@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <head>
+	<meta charset="utf-8">
 	<title>golem</title>
 	<link rel="stylesheet" href="bower/bootstrap/dist/css/bootstrap.min.css"/>
 	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="bower/angular-chart.js/dist/angular-chart.css">
+	<link rel="stylesheet" href="bower/nvd3/build/nv.d3.min.css">
 	<script src="bower/jquery/dist/jquery.min.js"></script>
 	<script src="bower/sockjs/sockjs.min.js"></script>
 	<script src="bower/angular/angular.min.js"></script>
+	<script src="bower/d3/d3.min.js"></script>
+	<script src="bower/nvd3/build/nv.d3.min.js"></script>
+	<script src="bower/angular-nvd3/dist/angular-nvd3.min.js"></script>
 	<script src="js/app.js"></script>
 </head>
 <body ng-app="Golem">
@@ -62,6 +68,9 @@
 				<div>i/o time: {{d.ioTime}}</div>
 				<div>weighted i/o time: {{d.ioTimeWeighted}}</div>
 			</div>
+		</div>
+		<div id="charts">
+			<nvd3 id="cpu-chart" options="cpuChart.options" data="cpuChart.data">
 		</div>
 	</div>
 </body>
