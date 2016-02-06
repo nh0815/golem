@@ -13,9 +13,10 @@ import (
 )
 
 type SysInfo struct {
-	Cpu CpuInfo `json:"cpu"`
-	Mem MemInfo `json:"memory"`
-	Net NetInfo `json:"network"`
+	Cpu  CpuInfo  `json:"cpu"`
+	Mem  MemInfo  `json:"memory"`
+	Net  NetInfo  `json:"network"`
+	Disk DiskInfo `json:"disk"`
 }
 
 type CpuInfo struct {
@@ -40,7 +41,7 @@ type NetInterface struct {
 	RecvBytes          int64  `json:"receiveBytes"`
 	RecvPackets        int64  `json:"receivePackets"`
 	RecvErrs           int64  `json:"receiveErrors"`
-	RecvDrop           int64  `json:"receiveDrops"`
+	RecvDrops          int64  `json:"receiveDrops"`
 	RecvFifo           int64  `json:"receiveFifo"`
 	RecvFrame          int64  `json:"receiveFrame"`
 	RecvCompressed     int64  `json:"receiveCompressed"`
@@ -53,6 +54,25 @@ type NetInterface struct {
 	TransmitCollisions int64  `json:"transmitCollisions"`
 	TransmitCarrier    int64  `json:"transmitCarrier"`
 	TransmitCompressed int64  `json:"transmitCompressed"`
+}
+
+type DiskInfo struct {
+	Disks []Disk `json:"disk"`
+}
+
+type Disk struct {
+	Name            string `json:"name"`
+	ReadsCompleted  int64  `json:"readsCompleted"`
+	ReadsMerged     int64  `json:"readsMerged"`
+	SectorsRead     int64  `json:"sectorsRead"`
+	TimeReading     int64  `json:"timeReading"`
+	WritesCompleted int64  `json:"writesCompleted"`
+	WritesMerged    int64  `json:"writesMerged"`
+	SectorsWritten  int64  `json:"sectorsWritten"`
+	TimeWriting     int64  `json:"timeWriting"`
+	IopsInProgress  int64  `json:"iopsInProgress"`
+	IOTime          int64  `json:"ioTime"`
+	IOTimeWeighted  int64  `json:"ioTimeWeighted"`
 }
 
 var broadcaster pubsub.Publisher
@@ -96,7 +116,7 @@ func poll() {
 }
 
 func read_status() SysInfo {
-	system := SysInfo{read_cpu_info(), read_mem_info(), read_net_info()}
+	system := SysInfo{read_cpu_info(), read_mem_info(), read_net_info(), read_disk_info()}
 	return system
 }
 
@@ -124,12 +144,31 @@ func read_mem_info() MemInfo {
 	return MemInfo{total, free}
 }
 
-func read_disk_info() string {
+func read_disk_info() DiskInfo {
+	disks := []Disk{}
 	data, err := ioutil.ReadFile("/proc/diskstats")
 	if err != nil {
 		panic(err)
 	}
-	return string(data)
+	data_strings := split_on_newline(strings.TrimSpace(string(data)))
+	for i := range data_strings {
+		disk_info := strings.Fields(data_strings[i])[2:]
+		name := disk_info[0]
+		reads_completed := string_to_int64(disk_info[1])
+		reads_merged := string_to_int64(disk_info[2])
+		sectors_read := string_to_int64(disk_info[3])
+		time_reading := string_to_int64(disk_info[4])
+		writes_completed := string_to_int64(disk_info[5])
+		writes_merged := string_to_int64(disk_info[6])
+		sectors_written := string_to_int64(disk_info[7])
+		time_writing := string_to_int64(disk_info[8])
+		io_progress := string_to_int64(disk_info[9])
+		io_time := string_to_int64(disk_info[10])
+		io_time_weighted := string_to_int64(disk_info[11])
+		disk := Disk{name, reads_completed, reads_merged, sectors_read, time_reading, writes_completed, writes_merged, sectors_written, time_writing, io_progress, io_time, io_time_weighted}
+		disks = append(disks, disk)
+	}
+	return DiskInfo{disks}
 }
 
 func read_net_info() NetInfo {
