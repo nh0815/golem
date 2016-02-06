@@ -17,7 +17,13 @@ app.controller('GolemController', ['$scope',
 			free: -1
 		};
 
-		$scope.network = [];
+		$scope.network = {
+			interfaces: []	
+		};
+
+		$scope.disk = {
+			disks: []	
+		};
 
 		var socket = new SockJS(window.location.origin + '/ws');
 
@@ -30,6 +36,7 @@ app.controller('GolemController', ['$scope',
 			$scope.cpu = systemInfo.cpu;
 			$scope.memory = systemInfo.memory;
 			$scope.network = systemInfo.network;
+			$scope.disk = systemInfo.disk;
 			$scope.$apply();
 		};
 
