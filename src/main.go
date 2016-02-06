@@ -57,7 +57,7 @@ type NetInterface struct {
 }
 
 type DiskInfo struct {
-	Disks []Disk `json:"disk"`
+	Disks []Disk `json:"disks"`
 }
 
 type Disk struct {
