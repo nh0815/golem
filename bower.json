@@ -20,6 +20,8 @@
     "bootstrap": "^3.3.6",
     "sockjs": "^0.3.4",
     "angular": "^1.4.9",
-    "angular-chart.js": "^0.8.8"
+    "angular-chart.js": "^0.8.8",
+    "Chart.js": "chartjs#^1.0.2",
+    "angular-nvd3": "^1.0.5"
   }
 }
