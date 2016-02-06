@@ -19,7 +19,6 @@
   "dependencies": {
     "bootstrap": "^3.3.6",
     "sockjs": "^0.3.4",
-    "angular": "^1.4.9",
-    "angular-nvd3": "^1.0.5"
+    "angular": "^1.4.9"
   }
 }
