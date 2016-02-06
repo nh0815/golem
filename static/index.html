@@ -31,7 +31,19 @@
 			<div ng-repeat="interface in network.interfaces">
 				<div class="name">{{interface.name}}</div>
 				<div>receive bytes: {{interface.receiveBytes}}</div>
+				<div>receive compressed: {{interface.receiveCompressed}}</div>
+				<div>receive drops: {{interface.receiveDrops}}</div>
+				<div>receive fifo: {{interface.receiveFifo}}</div>
+				<div>receive frame: {{interface.receiveFrame}}</div>
+				<div>receive multicast: {{interface.receiveMulticast}}</div>
+				<div>receive packets: {{interface.receievePackets}}</div>
 				<div>transmit bytes: {{interface.transmitBytes}}</div>
+				<div>transmit carrier: {{interface.transmitCarrier}}</div>
+				<div>transmit collisions: {{interface.transmitCollisions}}</div>
+				<div>transmit drops: {{interface.transmitDrops}}</div>
+				<div>transmit errors: {{interface.transmitErrors}}</div>
+				<div>transmit fifo: {{interface.transmitFifo}}</div>
+				<div>transmit packets: {{interface.transmitPackets}}</div>
 			</div>
 		</div>
 		<div id="disk">
