@@ -4,6 +4,8 @@ var app = angular.module('Golem', ['nvd3']);
 app.controller('GolemController', ['$scope',
 	function($scope){
 
+		var DATA_LIMIT = 100;
+
 		var previousCpu = {
 			user: 0,
 			nice: 0,
@@ -85,6 +87,10 @@ app.controller('GolemController', ['$scope',
 
 		var addCpuData = function(cpu, timestamp){
 			$scope.cpu.data[0].values.push({x:timestamp, y:cpu});
+			var length = $scope.cpu.data[0].values.length;
+			if(length > DATA_LIMIT){
+				$scope.cpu.data[0].values = $scope.cpu.data[0].values.slice(length - DATA_LIMIT, length);
+			}
 		};
 
 		var getCpuUsage = function(cpu){
@@ -107,11 +113,23 @@ app.controller('GolemController', ['$scope',
 		var addMemoryData = function(memory, timestamp){
 			var memoryUsage = (memory.total-memory.free) / memory.total;
 			$scope.memory.data[0].values.push({x: timestamp, y: memoryUsage});
+			var length = $scope.memory.data[0].values.length;
+			if(length > DATA_LIMIT){
+				$scope.memory.data[0].values = $scope.memory.data[0].values.slice(length - DATA_LIMIT, length);
+			}
 		};
 
 		var addNetworkData = function(network, timestamp){
 			$scope.network.data[0].values.push({x:timestamp, y:network.transmitBytes});
 			$scope.network.data[1].values.push({x:timestamp, y:network.receiveBytes});
+			var length1 = $scope.network.data[0].values.length;
+			if(length1 > DATA_LIMIT){
+				$scope.network.data[0].values = $scope.network.data[0].values.slice(length1 - DATA_LIMIT, length1);
+			}
+			var length2 = $scope.network.data[1].values.length;
+			if(length2 > DATA_LIMIT){
+				$scope.network.data[1].values = $scope.network.data[1].values.slice(length2 - DATA_LIMIT, length2);
+			}
 		};
 
 		var addDiskData = function(data, timestamp){};
