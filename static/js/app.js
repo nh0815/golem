@@ -19,6 +19,8 @@ app.controller('GolemController', ['$scope',
 			guestNice: 0
 		};
 
+		var previousNetwork = null;
+
 		/* chart code */
 
 		$scope.cpu = {
@@ -65,7 +67,7 @@ app.controller('GolemController', ['$scope',
 		$scope.network = {
 			options: {
 				chart: {
-					type: 'multiBarChart',
+					type: 'stackedAreaChart',
 					height: 450
 				},
 				title: {
@@ -106,12 +108,12 @@ app.controller('GolemController', ['$scope',
 			var totalDelta = total - previousTotal;
 			var idleDelta = idle - previousIdle;
 
-			return (totalDelta - idleDelta) / totalDelta;
+			return Math.round(100 * (totalDelta - idleDelta) / totalDelta);
 
 		};
 
 		var addMemoryData = function(memory, timestamp){
-			var memoryUsage = (memory.total-memory.free) / memory.total;
+			var memoryUsage = Math.round(100 * (memory.total-memory.free) / memory.total);
 			$scope.memory.data[0].values.push({x: timestamp, y: memoryUsage});
 			var length = $scope.memory.data[0].values.length;
 			if(length > DATA_LIMIT){
@@ -120,16 +122,19 @@ app.controller('GolemController', ['$scope',
 		};
 
 		var addNetworkData = function(network, timestamp){
-			$scope.network.data[0].values.push({x:timestamp, y:network.transmitBytes});
-			$scope.network.data[1].values.push({x:timestamp, y:network.receiveBytes});
-			var length1 = $scope.network.data[0].values.length;
-			if(length1 > DATA_LIMIT){
-				$scope.network.data[0].values = $scope.network.data[0].values.slice(length1 - DATA_LIMIT, length1);
+			if(previousNetwork){
+				$scope.network.data[0].values.push({x:timestamp, y:network.transmitBytes-previousNetwork.transmitBytes});
+				$scope.network.data[1].values.push({x:timestamp, y:network.receiveBytes-previousNetwork.receiveBytes});
+				var length1 = $scope.network.data[0].values.length;
+				if(length1 > DATA_LIMIT){
+					$scope.network.data[0].values = $scope.network.data[0].values.slice(length1 - DATA_LIMIT, length1);
+				}
+				var length2 = $scope.network.data[1].values.length;
+				if(length2 > DATA_LIMIT){
+					$scope.network.data[1].values = $scope.network.data[1].values.slice(length2 - DATA_LIMIT, length2);
+				}
 			}
-			var length2 = $scope.network.data[1].values.length;
-			if(length2 > DATA_LIMIT){
-				$scope.network.data[1].values = $scope.network.data[1].values.slice(length2 - DATA_LIMIT, length2);
-			}
+			previousNetwork = network;
 		};
 
 		var addDiskData = function(data, timestamp){};
