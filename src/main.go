@@ -91,7 +91,7 @@ func main() {
 	go func() {
 		poll()
 	}()
-	http.ListenAndServe(":3000", nil)
+	http.ListenAndServe("0.0.0.0:3000", nil)
 }
 
 func wsHandler(session sockjs.Session) {
